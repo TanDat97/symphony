@@ -38,7 +38,13 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 const indexRouter = require('./routes/index')
 
+const trackRouter = require('./routes/api/track')
+
+app.get('/favicon.ico', (req, res) => res.status(204));
+
 app.use('/', indexRouter)
+
+app.use('/api/tracks', trackRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

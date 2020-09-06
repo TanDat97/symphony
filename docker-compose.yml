@@ -13,6 +13,9 @@ services:
       POSTGRES_PASSWORD: root_123456
       POSTGRES_DB: symphony
       POSTGRES_HOST: postgres
+      MONGO_USER: tandat
+      MONGO_PASSWORD: root_123456
+      MONGO_DB: symphony
     command: npm run dev
     ports:
       - 5000:5000
@@ -39,3 +42,17 @@ services:
     image: postgres
     ports:
       - 5433:5432
+
+
+  mongo:
+    image: mongo
+    volumes:
+      - ./mongo:/docker-entrypoint-initdb.d
+    restart: always
+    ports:
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: tandat
+      MONGO_INITDB_ROOT_PASSWORD: root_123456
+      MONGO_INITDB_DATABASE: symphony
+      
