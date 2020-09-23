@@ -21,6 +21,56 @@ server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
+
+// socket init
+const socketIo = require("socket.io")
+const io = socketIo(server)
+
+const ClientManager = require('../sockets/clientManager')
+const RoomManager = require('../sockets/roomManager')
+const makeHandlers = require('../sockets/handler')
+const clientManager = ClientManager()
+const roomManager = RoomManager()
+
+io.on("connection", client => {
+  const {
+    handleRegister,
+    handleJoin,
+    handleLeave,
+    handleComment,
+    handleGetRooms,
+    handleGetAvailableClients,
+    handleDisconnect,
+  } = makeHandlers(client, clientManager, roomManager)
+
+  console.log("New client connected... " + client.id)
+
+  clientManager.addClient(client)
+
+  client.on('register', handleRegister)
+
+  client.on('join', handleJoin)
+
+  client.on('leave', handleLeave)
+
+  client.on('comment', handleComment)
+
+  client.on('rooms', handleGetRooms)
+
+  client.on('availableClients', handleGetAvailableClients)
+
+  client.on('disconnect', () => {
+    console.log('Client disconnect... ', client.id)
+    handleDisconnect()
+  })
+
+  client.on('error', (err) => {
+    console.log('Received error from client:', client.id)
+    console.log(err)
+  })
+})
+
+
 // Normalize a port into a number, string, or false.
 function normalizePort(val) {
   var port = parseInt(val, 10)

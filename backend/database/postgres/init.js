@@ -53,6 +53,17 @@ const createUserRoleTable =
     PRIMARY KEY (user_id, role_id)
   )`;
 
+const createUserDeviceTable = 
+  `CREATE TABLE IF NOT EXISTS
+  userdevice(
+    user_id INT NOT NULL REFERENCES users(user_id) ON DELETE RESTRICT,
+    ip VARCHAR(128) NOT NULL,
+    agent VARCHAR(256) NOT NULL,
+    address VARCHAR(256) NOT NULL,
+    first_login TIMESTAMP NOT NULL,
+    last_active TIMESTAMP NOT NULL
+  )`;
+
 /**
  * Drop Table
  */
@@ -63,6 +74,8 @@ const dropRolesTable = 'DROP TABLE IF EXISTS roles';
 const dropUsersTable = 'DROP TABLE IF EXISTS users';
 
 const dropUserRoleTable = 'DROP TABLE IF EXISTS userrole';
+
+const dropUserDeviceTable = 'DROP TABLE IF EXISTS userdevice';
 
 /**
  * Create All Tables
@@ -79,6 +92,8 @@ const createAllTables = async () => {
     console.log('users', users);
     const userrole = await utils.query(createUserRoleTable, []);
     console.log('userrole', userrole);
+    const userdevice = await utils.query(createUserDeviceTable, []);
+    console.log('userdevice', userdevice);
   } catch (err) {
     console.log(err)
   }
@@ -89,11 +104,13 @@ const createAllTables = async () => {
  */
 const dropAllTables = async () => {
   try {
+    const userdevice = await utils.query(dropUserDeviceTable, []);
+    console.log('userdevice', userdevice);
     const userrole = await utils.query(dropUserRoleTable, []);
     console.log('userrole', userrole);
     const users = await utils.query(dropUsersTable, []);
     console.log('users', users);
-    const roles = await utilsutils.query(dropRolesTable, []);
+    const roles = await utils.query(dropRolesTable, []);
     console.log('roles', roles);
     const credentials = await utils.query(dropCredentialsTable, []);
     console.log('credentials', credentials);

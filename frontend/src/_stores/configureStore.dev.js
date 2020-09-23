@@ -31,7 +31,7 @@ export default function configureStore(initialState) {
     initialState,
     compose(
       applyMiddleware(sagaMiddleware, saveAuth),
-      window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__() // add support for Redux dev tools
+      // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__() // add support for Redux dev tools
     )
   );
   sagaMiddleware.run(rootSaga);
