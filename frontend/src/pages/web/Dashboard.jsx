@@ -18,9 +18,10 @@ function Dashboard(props, {...rest}) {
     props.socket.join('room1', (err, history) => {
       setHistory(history)
     })
-    props.socket.registerHandler((entry) => {
-      setHistory(oldArray => [...oldArray, entry])
-    })
+  }
+
+  const leave = () => {
+    props.socket.leave('room1', () => {})
   }
 
   const gotoDevices = () => {
@@ -29,6 +30,13 @@ function Dashboard(props, {...rest}) {
   
   React.useEffect(() => {
     getClients();
+    props.socket.registerHandler((entry) => {
+      setHistory(oldArray => [...oldArray, entry])
+    })
+
+    return () => {
+      props.socket.leave('room1', () => {})
+    }
     // eslint-disable-next-line
   },[]);
   return (
@@ -40,6 +48,7 @@ function Dashboard(props, {...rest}) {
       <div>
         <input type="text" value={email} onChange={e => setEmail(e.target.value)}/>
         <button onClick={register}>register</button>
+        <button onClick={leave}>leave</button>
         <div>
           {history.map((e, index) => <div key={index}>{index + ' ' + e.user + ' ' + e.event}</div>)}
         </div>

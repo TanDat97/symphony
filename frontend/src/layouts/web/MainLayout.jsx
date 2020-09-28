@@ -32,7 +32,7 @@ function MainLayout(props, {...rest}) {
   const socket = Socket
   
   React.useEffect(() => {
-    // socket.connect()
+    socket.connect()
     return () => {
       socket.disconnect()
     };

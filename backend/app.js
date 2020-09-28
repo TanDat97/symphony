@@ -6,6 +6,7 @@ const logger = require('morgan');
 const sessions = require('express-session');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const redis = require('redis');
 
 const app = express();
 
@@ -15,6 +16,9 @@ const corsOption = {
   credentials: true,
   exposedHeaders: ['authorization']
 }
+
+const redisClient = redis.createClient({ host: 'redis' });
+redisClient.on('connect', () => console.log('Connected to Redis'));
 
 app.use(cors(corsOption))
 
@@ -29,7 +33,6 @@ app.use(bodyParser.urlencoded({
     extended: false
 }))
 
-app.use(cors())
 app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))

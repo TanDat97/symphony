@@ -26,13 +26,18 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: root_123456
       MONGO_INITDB_DATABASE: symphony
 
+  redis:
+    image: redis
+    ports:
+      - "6380:6379"
+
   backend:
     container_name: backend
     build: ./backend
     working_dir: /app/backend
     volumes: 
       - ./backend:/app/backend
-    depends_on: ["mongo"]
+    depends_on: ["mongo", "redis"]
     environment: 
       POSTGRES_USER: tandat
       POSTGRES_PASSWORD: root_123456
@@ -41,6 +46,7 @@ services:
       MONGO_USER: tandat
       MONGO_PASSWORD: root_123456
       MONGO_DB: symphony
+      REDIS_URI: redis://redis:6380
     command: yarn dev
     ports:
       - 5000:5000
